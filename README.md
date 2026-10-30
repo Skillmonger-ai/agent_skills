@@ -28,3 +28,13 @@ Select the agent you use when prompted. Alternatively, copy the complete `skills
 - [Terms](https://skillmonger.ai/terms) and [disclaimers](https://skillmonger.ai/disclaimers)
 
 Skillmonger is a paid external service. The user chooses the bid and reviews and pays on the approval page for the card workflow. Autonomous x402 payments require separately authorized wallet spending. Installing these instructions alone does not authorize submission or spending.
+
+## Source of truth
+
+This repository is a published mirror. Make changes in Skillmonger's canonical application repository, in `skill/skillmonger/` and the API documentation it references—not directly in this mirror. Publish the reviewed, tested export to keep the skill, agent playbook and service contracts aligned.
+
+- Source commit: `98e507437262600b378668f323d49fc3dc7703c3`
+- Skill version: `1.1.3`
+- Published bundle: the three Markdown files listed above, copied without content changes.
+
+Publication of this mirror does not imply a listing or approval in any agent marketplace.
