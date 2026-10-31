@@ -1,0 +1,23 @@
+{
+  "files": {
+    "README.md": {
+      "bytes": 2271,
+      "sha256": "c64e4b64d876927d27ff5e174e3b8bcd435c4219a48289c1a34aa5698c38c4a3"
+    },
+    "skills/skillmonger/SKILL.md": {
+      "bytes": 23982,
+      "sha256": "1999f7ab4f7b5f4e8f7ba16a47d280bfe44c9f139a1688124485e3b7295e7244"
+    },
+    "skills/skillmonger/references/api-reference.md": {
+      "bytes": 20533,
+      "sha256": "adaacf1327dfe6b99d040ec6a965828be97983f9a2568a466a3a16ea4fd6b570"
+    },
+    "skills/skillmonger/references/tags.md": {
+      "bytes": 2474,
+      "sha256": "4c7f26237876f6cfefcd6d76adcd680e8244651dc57f71b1c0528ce4cc9b7f65"
+    }
+  },
+  "schema_version": 1,
+  "skill_version": "1.1.4",
+  "source_commit": "7b2af6f78917ad60db1d64a9ae26fa2726a0e45b"
+}

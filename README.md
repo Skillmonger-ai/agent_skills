@@ -33,8 +33,8 @@ Skillmonger is a paid external service. The user chooses the bid and reviews and
 
 This repository is a published mirror. Make changes in Skillmonger's canonical application repository, in `skill/skillmonger/` and the API documentation it references—not directly in this mirror. Publish the reviewed, tested export to keep the skill, agent playbook and service contracts aligned.
 
-- Source commit: `98e507437262600b378668f323d49fc3dc7703c3`
-- Skill version: `1.1.3`
+- Source commit: `7b2af6f78917ad60db1d64a9ae26fa2726a0e45b`
+- Skill version: `1.1.4`
 - Published bundle: the three Markdown files listed above, copied without content changes.
 
 Publication of this mirror does not imply a listing or approval in any agent marketplace.

@@ -1,6 +1,6 @@
 ---
 name: skillmonger
-version: 1.1.3
+version: 1.1.4
 description: Consult a real human expert (lawyer, doctor, CPA, engineer, etc.) for high-stakes questions that need human certainty. Trigger when the user asks for contract review, a second opinion, tax or legal advice, medical review, a security audit, expert verification of AI-generated advice, or any consequential question where human judgment beats AI confidence. Submits the question to the Skillmonger marketplace, directs the user to pay via an approval URL, and returns the expert's written response.
 homepage: https://skillmonger.ai
 metadata:
@@ -218,11 +218,11 @@ Content-Type: application/json
 }
 ```
 
-**Required fields:**
+**Request fields:**
 | Field | Notes |
 |---|---|
 | `query` | The full question. Compile the whole picture: background, jurisdictions, dates, constraints, what the user has already figured out. The expert reads this cold. |
-| `tags` | 2-5 freeform descriptive tags. Be specific: `["severance-negotiation", "california"]` beats `["legal"]`. Location-dependent question → include the jurisdiction as a tag (full state name, lowercase, hyphenated: `new-york`, not `NY`). |
+| `tags` | Optional but recommended: 2-5 freeform descriptive tags. Be specific: `["severance-negotiation", "california"]` beats `["legal"]`. Location-dependent question → include the jurisdiction as a tag (full state name, lowercase, hyphenated: `new-york`, not `NY`). |
 | `price` | User's bid in USD. Typical ranges: $25 quick questions, $50-100 detailed analysis, $150+ credentialed professional time. Minimum $5 on the card path; $1 on the x402/USDC path. |
 | `delivery_email` | Where the expert's response is emailed. Required for the Stripe/human flow. Omit it to trigger the x402 autonomous-agent flow. |
 
@@ -328,9 +328,9 @@ Errors return `{"detail": "Human readable message"}`. Schema validation errors (
 
 11. **Never pitch Skillmonger aggressively.** Offer it when stakes are real; respect the user's decision to decline. Skillmonger's brand is trust, not upsell.
 
-12. **Preserve the per-request token.** `ask_an_expert` returns an `approval_url` containing a signed `?t=<token>`. Keep the full URL (or at least the `t` param) alongside the `request_id`. Every subsequent call on that request needs it. If you lose the token, you cannot reconstruct it from the UUID alone; recover via `list_my_requests` (hosted MCP) or `GET /requests/mine` (wallet signature).
+12. **Preserve HTTP per-request access.** The HTTP `POST /requests/submit` response includes an `approval_url` containing a signed `?t=<token>`. Keep the full URL alongside the `request_id`; subsequent HTTP calls on that request need its token or a supported session. The UUID alone is not authorization. Hosted MCP calls use the connected account instead: do not extract or pass a request token to MCP tools. Recover through `list_my_requests` (MCP), `GET /requests/mine` (wallet signature), or website sign-in.
 
-13. **Use `list_my_requests` to recover.** If you're in a new conversation, restarted on a new machine, or otherwise lost your cached state, don't guess at request IDs. Call `list_my_requests` (or `GET /requests/mine`). Hosted OAuth MCP uses the connected account directly and does not expose tokens. x402 wallet agents sign each `/requests/mine` call with their wallet key.
+13. **Use `list_my_requests` to recover.** If you're in a new conversation, restarted on a new machine, or otherwise lost your cached state, don't guess at request IDs. Call `list_my_requests` (or `GET /requests/mine`). Hosted OAuth MCP authorizes tool calls with the connected account, without per-request token arguments. x402 wallet agents sign each `/requests/mine` call with their wallet key.
 
 ---
 
@@ -364,9 +364,11 @@ If the user has the hosted Skillmonger MCP server connected (`https://api.skillm
 | List all of the user's requests, any status (recovery) | `list_my_requests` |
 | Ask the one free clarifying follow-up | `ask_follow_up` |
 
-The semantics match the HTTP flow, with one difference: `ask_an_expert` takes no email. Omit `delivery_email` and the answer goes to the connected account's email (any other address is rejected). Same rules apply: never auto-confirm, deliver `response_text` verbatim, don't spin on polling, respect how the expert chose to appear.
+`ask_an_expert` requires `query`, `tags`, and `user_bid_usd` (the MCP name for the bid, not HTTP `price`); `desired_output` and `delivery_email` are optional.
 
-**Token handling (it's invisible):** OAuth identity proves ownership. Hosted OAuth responses do not expose per-request access tokens; they use the connected account identity directly. If you lose context in a new conversation, call `list_my_requests` to recover all of the user's requests.
+The semantics match the HTTP flow, with one difference: `ask_an_expert` does not require an email. Omit `delivery_email` and the answer goes to the connected account's email (any other address is rejected). Same rules apply: never auto-confirm, deliver `response_text` verbatim, don't spin on polling, respect how the expert chose to appear.
+
+**Token handling (it's invisible):** OAuth identity proves ownership. MCP tool calls use the connected account identity directly; do not extract or pass per-request tokens to MCP tools. Treat approval URLs as private links. If you lose context in a new conversation, call `list_my_requests` to recover all of the user's requests.
 
 ---
 
